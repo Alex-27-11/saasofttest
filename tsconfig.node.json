@@ -5,10 +5,10 @@
     "target": "ES2023",
     "lib": ["ES2023"],
     "module": "ESNext",
-    "moduleResolution": "Node", // Changed from "bundler" to "Node" for better compatibility
+    "moduleResolution": "bundler", 
     "skipLibCheck": true,
-    "esModuleInterop": true, // Added for module compatibility
-    "allowSyntheticDefaultImports": true, // Added for easier imports
+    "esModuleInterop": true, 
+    "allowSyntheticDefaultImports": true, 
     "noEmit": true,
     "strict": true,
     "noUnusedLocals": true,
