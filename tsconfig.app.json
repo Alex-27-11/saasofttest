@@ -1,0 +1,22 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+	 "composite": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "esModuleInterop": true, // Добавлено для совместимости с модулями
+    "allowSyntheticDefaultImports": true, // Добавлено для упрощения импортов
+    "skipLibCheck": true, // Игнорировать проверку типов в сторонних библиотеках
+    "moduleResolution": "Node", // Явно указать Node-стиль разрешения модулей
+    "baseUrl": ".", // Базовый путь для импортов
+    "paths": {
+      "@/*": ["./src/*"] // Алиас для упрощения импортов из src
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules", "dist"] 
+}
