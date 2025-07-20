@@ -1,4 +1,3 @@
-<!-- src/components/AccountRow.vue -->
 <template>
   <v-row class="account-row">
     <v-col cols="3">
@@ -44,18 +43,12 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import { type Account } from '@/store/accounts';
-
-interface AccountForm extends Account {
-  labelInput: string;
-  isLabelValid: boolean;
-  isTypeValid: boolean;
-  isLoginValid: boolean;
-  isPasswordValid: boolean;
-}
+import { useAccountValidation } from '@/utils/useAccountValidation';
+import type { Account, AccountForm, ValidationFields } from '@/types/types';
 
 const props = defineProps<{
-  account: AccountForm;
+  account: Account;
+  accountTypes: string[];
 }>();
 
 const emit = defineEmits<{
@@ -63,31 +56,36 @@ const emit = defineEmits<{
   (e: 'remove', id: string): void;
 }>();
 
-const accountTypes = ['LDAP', 'Local'];
+const localAccount = reactive<AccountForm>({
+  ...props.account,
+  labelInput: props.account.labels.map((label) => label.text).join(';'),
+  isLabelValid: true,
+  isTypeValid: true,
+  isLoginValid: true,
+  isPasswordValid: true,
+});
 
-const localAccount = reactive<AccountForm>({ ...props.account });
-
-const validateField = (field: keyof AccountForm, value: any, account: AccountForm) => {
-  switch (field) {
-    case 'labelInput':
-      return value.length <= 50;
-    case 'type':
-      return ['LDAP', 'Local'].includes(value);
-    case 'login':
-      return value.length > 0 && value.length <= 100;
-    case 'password':
-      return account.type === 'LDAP' || (value !== null && value.length > 0 && value.length <= 100);
-    default:
-      return true;
-  }
+const validationRules = {
+  labelInput: (value: string) => value.length <= 50,
+  type: (value: string) => props.accountTypes.includes(value),
+  login: (value: string) => value.length > 0 && value.length <= 100,
+  password: (value: string | null, account: AccountForm) =>
+    account.type === 'LDAP' || (value !== null && value.length > 0 && value.length <= 100),
 };
 
-const handleUpdate = () => {
-  localAccount.isLabelValid = validateField('labelInput', localAccount.labelInput, localAccount);
-  localAccount.isTypeValid = validateField('type', localAccount.type, localAccount);
-  localAccount.isLoginValid = validateField('login', localAccount.login, localAccount);
-  localAccount.isPasswordValid = validateField('password', localAccount.password, localAccount);
+const validationFields: (Exclude<keyof AccountForm, ValidationFields>)[] = [
+  'labelInput',
+  'type',
+  'login',
+  'password',
+];
 
+const { validate } = useAccountValidation(localAccount, validationRules, validationFields);
+
+validate(); 
+
+const handleUpdate = () => {
+  validate();
   emit('update', { ...localAccount });
 };
 </script>

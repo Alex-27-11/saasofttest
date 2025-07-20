@@ -3,7 +3,7 @@ import AccountForm from './components/AccountForm.vue'
 </script>
 
 <template>
-  <AccountForm />
+  <AccountForm :accountTypes="['LDAP', 'Local']" />
 </template>
 
 <style scoped>

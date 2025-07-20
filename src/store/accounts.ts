@@ -1,16 +1,5 @@
 import { defineStore } from 'pinia';
-
-interface Label {
-  text: string;
-}
-
-export interface Account {
-  id: string;
-  labels: Label[];
-  type: 'LDAP' | 'Local';
-  login: string;
-  password: string | null;
-}
+import type { Account } from '@/types/types';
 
 export const useAccountStore = defineStore('accounts', {
   state: () => ({
